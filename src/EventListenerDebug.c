@@ -1,15 +1,16 @@
 #include <stdio.h>
 #include <windows.h>
 
-#define COM_PORT "\\\\.\\COM3" //ポート番号をセット
+//#define COM_PORT "\\\\.\\COM3"
 #define BAUD 9600 //通信速度[bps]
 
-int main() {
-    printf("EventListenerDebug.c loaded\n");
+int eventListenerDebgug(char com_port[]) {
     
+    printf("EventListenerDebug.c loaded\n");
+
     HANDLE handlePort;
     handlePort = CreateFile(
-        COM_PORT,       //Filename
+        com_port,       //Filename
         GENERIC_READ,   //dwDesiredAccess
         0,              //dwShareMode
         NULL,           //lpSecurityAttributes
@@ -21,10 +22,10 @@ int main() {
 
     int eventLoopFlag = 1;
     if (handlePort == INVALID_HANDLE_VALUE) {
-        printf("Port %s opened failed\n", COM_PORT);
+        printf("Port %s opened failed\n", com_port);
         eventLoopFlag = 0;
     }else{
-        printf("Port %s opened successfully\n", COM_PORT);
+        printf("Port %s opened successfully\n", com_port);
     }
     
     DWORD dwEvtMask;//イベント状態
@@ -55,9 +56,8 @@ int main() {
             // データを1byte読み込む
             if (ReadFile(handlePort, &received_char, 1, &dwBytesRead, NULL)) {
                 printf("Signal detected!!\n");
-                while(dwBytesRead) {
+                if(dwBytesRead) {
                     printf("Received char: %c\n", received_char);
-                    ReadFile(handlePort, &received_char, 1, &dwBytesRead, NULL);
                 }
             }
         }else {

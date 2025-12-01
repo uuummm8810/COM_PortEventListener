@@ -4,9 +4,10 @@
 //#define COM_PORT "\\\\.\\COM3"
 #define BAUD 9600 //通信速度[bps]
 
-int eventListenerDebgug(char com_port[]) {
+int eventListenerDebug(char com_port[]) {
     
     printf("EventListenerDebug.c loaded\n");
+    printf("PORT:%d",com_port);
 
     HANDLE handlePort;
     handlePort = CreateFile(

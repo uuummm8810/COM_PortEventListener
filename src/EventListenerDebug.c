@@ -69,7 +69,24 @@ int eventListenerDebug(char com_port[]) {
     if (handlePort != INVALID_HANDLE_VALUE){
         CloseHandle(handlePort);
     }
-    printf("Press ENTER key to exit...\n");
-    getchar();
+
     return 0;
+}
+
+int selectPort(){//デバッグ用のコード(returnせずループ)
+    char port[10];
+    char portnum[4];
+
+    while(1){
+        printf("input port number :");
+        if(fgets(portnum,sizeof(portnum),stdin) != NULL){
+            char *p = strchr(portnum, '\n');//文字列として受け取ることで入力が数字以外の場合をカバー
+        }else{//portnum内に\nがない(配列から文字があふれてstdinに残ってるとき)
+            int buffer;
+            while( ((buffer=getchar) != '\n') && buffer!=EOF);
+        }
+        
+        sprintf(port,"\\\\.\\COM%s",portnum);
+        eventListenerDebug(port);
+    }
 }

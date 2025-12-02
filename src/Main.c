@@ -1,6 +1,9 @@
+#include <stdio.h>
 #include "EventListenerDebug.h"
 
 //test
 int main(){
-    eventListenerDebug("\\\\.\\COM3");
+    selectPort();
+
+    return 0;
 }

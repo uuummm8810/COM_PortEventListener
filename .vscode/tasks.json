@@ -11,7 +11,7 @@
 				"-g",
 				"${workspaceFolder}/src/*.c",
 				"-o",
-				"${fileDirname}\\${fileBasenameNoExtension}.exe",
+				"${workspaceFolder}/build/${fileBasenameNoExtension}.exe",
 				"-static"
 			],
 			"options": {

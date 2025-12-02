@@ -1,12 +1,11 @@
 #include <stdio.h>
 #include <windows.h>
+#include "SignalControl.h"
 
 //#define COM_PORT "\\\\.\\COM3"
 #define BAUD 9600 //通信速度[bps]
 
-int eventListenerDebug(char com_port[]) {
-    
-    printf("EventListenerDebug.c loaded\n");
+int eventListener(char com_port[]) {
 
     HANDLE handlePort;
     handlePort = CreateFile(
@@ -22,10 +21,10 @@ int eventListenerDebug(char com_port[]) {
 
     int eventLoopFlag = 1;
     if (handlePort == INVALID_HANDLE_VALUE) {
-        printf("Port %s opened failed\n", com_port);
+        //printf("Port %s opened failed\n", com_port);
         eventLoopFlag = 0;
     }else{
-        printf("Port %s opened successfully\n", com_port);
+        //printf("Port %s opened successfully\n", com_port);
     }
     
     DWORD dwEvtMask;//イベント状態
@@ -50,18 +49,14 @@ int eventListenerDebug(char com_port[]) {
     // イベントリスナーのメインループ
     while(eventLoopFlag) {
         
-        printf("Waiting for event...\n");
+        //printf("Waiting for event...\n");
         if (WaitCommEvent(handlePort, &dwEvtMask, NULL)) {//WaitCommEventで一時休止
             
-            // データを1byte読み込む
-            if (ReadFile(handlePort, &received_char, 1, &dwBytesRead, NULL)) {
-                printf("Signal detected!!\n");
-                if(dwBytesRead) {
-                    printf("Received char: %c\n", received_char);
-                }
-            }
+            // データを1byte読み込み判定
+            signalCharJudgment(received_char);
+            
         }else {
-            printf("Failed to WaitCommEvent\n");
+            //printf("Failed to WaitCommEvent\n");
             break;
         }
     }
@@ -69,7 +64,7 @@ int eventListenerDebug(char com_port[]) {
     if (handlePort != INVALID_HANDLE_VALUE){
         CloseHandle(handlePort);
     }
-    printf("Press ENTER key to exit...\n");
-    getchar();
+    //printf("Press ENTER key to exit...\n");
+    //getchar();
     return 0;
 }

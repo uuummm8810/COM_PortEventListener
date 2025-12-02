@@ -1,12 +1,14 @@
 #include <Windows.h>
 #include <stdio.h>
 
-int comControlerVBA(char VBA_Path[]){
-    //pythonで作成したCOM操作を呼び出す
+int comControlerVBA(char vbaPath[]){//pythonで作成したCOM操作を呼び出す
+    
     STARTUPINFO startupInfo;
     PROCESS_INFORMATION processInfo;
+    char const COM_CONTROLE_EXE_PATH;//EXEファイルのパスを指定(未定義)
+
     char cmd[256];
-    sprintf(cmd,"COM_ControlVBA.exe arg1 %s",VBA_Path);
+    sprintf(cmd,"%s arg1 %s",COM_CONTROLE_EXE_PATH, vbaPath);//後でsnprintfでオーバーランを防ぐように変更
     
     ZeroMemory(&startupInfo, sizeof(startupInfo));
     startupInfo.cb = sizeof(startupInfo);

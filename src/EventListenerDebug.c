@@ -76,17 +76,27 @@ int eventListenerDebug(char com_port[]) {
 int selectPort(){//デバッグ用のコード(returnせずループ)
     char port[10];
     char portnum[4];
-
+    char buffer[3];
     while(1){
         printf("input port number :");
+        
+        //下記はバッファに残った部分の削除をできてないので調整
+        /*
         if(fgets(portnum,sizeof(portnum),stdin) != NULL){
             char *p = strchr(portnum, '\n');//文字列として受け取ることで入力が数字以外の場合をカバー
         }else{//portnum内に\nがない(配列から文字があふれてstdinに残ってるとき)
             int buffer;
-            while( ((buffer=getchar) != '\n') && buffer!=EOF);
+            while( ((buffer=getchar()) != '\n') && buffer!=EOF);
         }
-        
+        */
+
+        //fgetsの修正まで代用
+        //↓
+        //下記はバッファのオーバーランは防ぐものの残バッファが生じる
+        scanf("%3s",buffer);
+        sprintf(portnum,"%s\0",buffer);        
         sprintf(port,"\\\\.\\COM%s",portnum);
+
         eventListenerDebug(port);
     }
 }

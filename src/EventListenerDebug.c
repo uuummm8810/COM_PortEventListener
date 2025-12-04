@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <windows.h>
+#include <sysinfoapi.h>
+#include "SignalControl.h"
 
 //#define COM_PORT "\\\\.\\COM3"
 #define BAUD 9600 //通信速度[bps]
@@ -47,6 +49,12 @@ int eventListenerDebug(char com_port[]) {
     SetCommTimeouts(handlePort, &timeouts);//timeout=0
     SetCommMask(handlePort, EV_RXCHAR);//EV_RXCHARを検知したときにhandlePortを呼び出す
 
+    //モールス信号方式での信号判定のための設定
+    DWORD MAX_D_TIME;
+    int signalCount;
+    DWORD currentTime = GetTickCount();
+    DWORD d_time; 
+
     // イベントリスナーのメインループ
     while(eventLoopFlag) {
         
@@ -54,12 +62,27 @@ int eventListenerDebug(char com_port[]) {
         if (WaitCommEvent(handlePort, &dwEvtMask, NULL)) {//WaitCommEventで一時休止
             
             // データを1byte読み込む
+            
             if (ReadFile(handlePort, &received_char, 1, &dwBytesRead, NULL)) {
                 printf("Signal detected!!\n");
-                if(dwBytesRead) {
+                
                     printf("Received char: %c\n", received_char);
+                    signalCharJudgment(received_char);
+                
+            }
+            
+
+            //モールス信号用(封印)
+            /*
+            while(ReadFile(handlePort, &received_char, 1, &dwBytesRead, NULL)){
+                d_time=GetTickCount()-currentTime;
+                if(d_time < MAX_D_TIME){
+                    signalCount++;
+                }else{
+                    signalMolsJudgment(signalCount);
                 }
             }
+            */
         }else {
             printf("Failed to WaitCommEvent\n");
             break;

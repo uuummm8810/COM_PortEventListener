@@ -4,7 +4,7 @@
 		{
 			"type": "cppbuild",
 			"label": "C/C++: gcc.exe build active file",
-			"command": "C:/Program Files (x86)/mingw64/bin/gcc.exe",
+			"command": "C:/Users/uuumm/mingw64/bin/gcc.exe",
 			"args": [
 				"-fdiagnostics-color=always",
 				"-I${workspaceFolder}/include",
@@ -15,7 +15,7 @@
 				"-static"
 			],
 			"options": {
-				"cwd": "C:/Program Files (x86)/mingw64/bin"
+				"cwd": "C:/Users/uuumm/mingw64/bin"
 			},
 			"problemMatcher": [
 				"$gcc"
@@ -24,7 +24,7 @@
 				"kind": "build",
 				"isDefault": true
 			},
-			"detail": "compiler: C:/Program Files (x86)/mingw64/bin/gcc.exe"
+			"detail": "compiler: C:/Users/uuumm/mingw64/bin/gcc.exe"
 		}
 	]
 }

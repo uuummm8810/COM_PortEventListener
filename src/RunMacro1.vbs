@@ -1,11 +1,11 @@
 Dim excel
-Dim macroPath
+Dim macroWorkBookPath
 Dim targetWorkBook
 
 Dim args
 Set args = WScript.Arguments
 
-macroPath=args(0)
+macroWorkBookPath=args(0)
 
 Set excel = GetObject(, "Excel.Application") ' 起動中のExcelを取得
 excel.ScreenUpdating = False

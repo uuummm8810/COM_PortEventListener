@@ -13,8 +13,13 @@ int excuteVBScript(char filename[200]){
     //arg1=vbsPath;
     
     // \"%s\" とすることで、実行時には "パス" として展開される
-    sprintf(cmd, "cscript //nologo %260s/src/\"%200s\" \"%260s\"", currentPath,filename,currentPath);
-
-    system(cmd);
+    //sprintf(cmd, "cscript //nologo %s/src/\"%s\" \"%s\"", currentPath,filename,currentPath);
+    //引き渡し先VBScriptの引数 は第一引数がMacroWorkBookPathである
+    
+    //testコード
+    //環境次第で動作しないので必ず変更すること
+    //
+    
+    system("cscript //nologo C:/Users/uuumm/Documents/GitHub/COM_PortEventListener/src/RunMacro1.vbs C:/Users/uuumm/Documents/GitHub/COM_PortEventListener/bin/MacroBook.xlsx");
     return 0;
 }

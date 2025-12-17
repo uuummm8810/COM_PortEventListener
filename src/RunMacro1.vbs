@@ -1,6 +1,8 @@
 Dim excel
+
 Dim macroWorkBookPath, macroWB
 Dim targetWorkBook
+
 
 ' 引数のチェックをするエラーハンドリングを後で行うこと
 Dim args

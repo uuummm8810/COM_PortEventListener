@@ -1,6 +1,6 @@
 Dim excel
 
-Dim macroWorkBookPath, macroWB
+Dim macroWorkBookPath, macroWorkBook
 Dim targetWorkBook
 
 
@@ -15,12 +15,13 @@ Set targetWorkBook = excel.ActiveWorkbook
 
 ' エクセル画面更新をしばらく停止
 excel.ScreenUpdating = False
+excel.ScreenUpdating = True
 
-Set macroWB = excel.Workbooks.Open(macroWorkBookPath)
+Set macroWorkBook = excel.Workbooks.Open(macroWorkBookPath)
 
  ' マクロ実行
-excel.Run "'" & macroWB.Name & "'!Macro1", targetWorkBook.Name
+targetWorkBook.Activate
+excel.Run "'" & macroWorkBook.Name & "'!Macro1"
 
 ' マクロ用Workbookを閉じてから画面更新を再開してマクロWBを画面に見せない
-macroWB.Close False
-excel.ScreenUpdating = True
+macroWorkBook.Close False

@@ -21,7 +21,7 @@ Set macroWorkBook = excel.Workbooks.Open(macroWorkBookPath)
 
  ' マクロ実行
 targetWorkBook.Activate
-excel.Run "'" & macroWorkBook.Name & "'!SumBelowBlank"
+excel.Run "'" & macroWorkBook.Name & "'!LinEstAboveCell"
 
 ' マクロ用Workbookを閉じてから画面更新を再開してマクロWBを画面に見せない
 macroWorkBook.Close False

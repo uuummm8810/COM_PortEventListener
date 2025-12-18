@@ -20,6 +20,6 @@ int excuteVBScript(char filename[200]){
     //環境次第で動作しないので必ず変更すること
     //
     
-    system("cscript //nologo C:/Users/uuumm/Documents/GitHub/COM_PortEventListener/src/RunMacro1.vbs C:\\Users\\uuumm\\Documents\\GitHub\\COM_PortEventListener\\bin\\MacroBook.xlsm");
+    system("cscript //nologo D:/COM_PortEventListener/src/RunMacro1.vbs D:\\COM_PortEventListener\\bin\\MacroBook.xlsm");
     return 0;
 }

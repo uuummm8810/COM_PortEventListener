@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <windows.h>
+
 #include "CommonObjectControler.h"
 #include "ExcuteVBScript.h"
 
@@ -5,15 +8,23 @@ int signalCharJudgment(char signal_char){
 
     switch (signal_char){
     case '0':
-        excuteVBScript("./bin.RunMacro1.vbs");
-
+        system("cscript //nologo D:/COM_PortEventListener/src/RunMacro1.vbs D:\\COM_PortEventListener\\bin\\MacroBook.xlsm");
         return 0;
     case '1':
-        comControlerVBA("sample.vba");
-
+         system("cscript //nologo D:/COM_PortEventListener/src/RunAverage.vbs D:\\COM_PortEventListener\\bin\\MacroBook.xlsm");
         return 0;
     
+    case '2':
+        system("cscript //nologo D:/COM_PortEventListener/src/RunLinEstAboveCell.vbs D:\\COM_PortEventListener\\bin\\MacroBook.xlsm");
+    
+        return 0;
+
+    case '3':
+        system("cscript //nologo D:/COM_PortEventListener/src/RunCalcStdevPAboveCell.vbs D:\\COM_PortEventListener\\bin\\MacroBook.xlsm");
+        return 0;
+
     default:
+    
         break;
     }
 

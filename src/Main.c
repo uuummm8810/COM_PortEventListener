@@ -4,7 +4,7 @@
 
 //test
 int main(){
-    excuteVBScript("./src/RunMacro1.vbs");
+    selectPort();
     //selectPort();
 
     return 0;

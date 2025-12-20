@@ -16,7 +16,6 @@ int signalCharJudgment(char signal_char){
             return 0;
         
         case '2':
-            system("cscript //nologo D:/COM_PortEventListener/src/ExcuteVBA.vbs D:\\COM_PortEventListener\\bin\\MacroBook.xlsm LinEstAboveCell");
             excuteVBScript("LinEstAboveCell");
             return 0;
 

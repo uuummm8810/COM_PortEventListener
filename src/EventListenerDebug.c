@@ -70,19 +70,7 @@ int eventListenerDebug(char com_port[]) {
                     signalCharJudgment(received_char);
                 
             }
-            
 
-            //モールス信号用(封印)
-            /*
-            while(ReadFile(handlePort, &received_char, 1, &dwBytesRead, NULL)){
-                d_time=GetTickCount()-currentTime;
-                if(d_time < MAX_D_TIME){
-                    signalCount++;
-                }else{
-                    signalMolsJudgment(signalCount);
-                }
-            }
-            */
         }else {
             printf("Failed to WaitCommEvent\n");
             break;

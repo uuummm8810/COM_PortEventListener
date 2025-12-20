@@ -23,6 +23,9 @@ int signalCharJudgment(char signal_char){
         system("cscript //nologo D:/COM_PortEventListener/src/RunCalcStdevPAboveCell.vbs D:\\COM_PortEventListener\\bin\\MacroBook.xlsm");
         return 0;
 
+    case 'd':
+        system("cscript //nologo D:/COM_PortEventListener/src/ExcuteVBA.vbs D:\\COM_PortEventListener\\bin\\MacroBook.xlsm Macro1");
+        return 0;
     default:
     
         break;

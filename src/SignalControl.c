@@ -8,28 +8,30 @@ int signalCharJudgment(char signal_char){
 
     switch (signal_char){
         case '0':
-            system("cscript //nologo D:/COM_PortEventListener/src/ExcuteVBA.vbs D:\\COM_PortEventListener\\bin\\MacroBook.xlsm SumBelowBlank");
+            excuteVBScript("SumBelowBlank");
             return 0;
-            
+
         case '1':
-            system("cscript //nologo D:/COM_PortEventListener/src/ExcuteVBA.vbs D:\\COM_PortEventListener\\bin\\MacroBook.xlsm AverageWithBlankCheck");
+            excuteVBScript("AverageWithBlankCheck");
             return 0;
         
         case '2':
             system("cscript //nologo D:/COM_PortEventListener/src/ExcuteVBA.vbs D:\\COM_PortEventListener\\bin\\MacroBook.xlsm LinEstAboveCell");
+            excuteVBScript("LinEstAboveCell");
             return 0;
-        
+
         case '3':
-            system("cscript //nologo D:/COM_PortEventListener/src/ExcuteVBA.vbs D:\\COM_PortEventListener\\bin\\MacroBook.xlsm CalcStdevPAboveCell");
+            excuteVBScript("CalcStdevPAboveCell");
             return 0;
-        
-        case 'd':
-            system("cscript //nologo D:/COM_PortEventListener/src/ExcuteVBA.vbs D:\\COM_PortEventListener\\bin\\MacroBook.xlsm Macro1");
+
+        case 'd':               
+            excuteVBScript("Macro1");            
             return 0;
-        
+
         default:
             break;
     }
 
     //signal_charをもとにコードが実行されないのなら1を戻す
     return 1;
+}

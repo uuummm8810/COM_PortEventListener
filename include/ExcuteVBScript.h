@@ -1,6 +1,6 @@
 #ifndef ExcuteVBScript
 #define ExcuteVBScript
 
-int excuteVBScript(char vbsPath[]);
+int excuteVBScript(char macroName[]);
 
 #endif

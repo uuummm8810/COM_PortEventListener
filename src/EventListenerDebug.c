@@ -49,12 +49,6 @@ int eventListenerDebug(char com_port[]) {
     SetCommTimeouts(handlePort, &timeouts);//timeout=0
     SetCommMask(handlePort, EV_RXCHAR);//EV_RXCHARを検知したときにhandlePortを呼び出す
 
-    //モールス信号方式での信号判定のための設定
-    DWORD MAX_D_TIME;
-    int signalCount;
-    DWORD currentTime = GetTickCount();
-    DWORD d_time; 
-
     // イベントリスナーのメインループ
     while(eventLoopFlag) {
         

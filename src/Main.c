@@ -4,8 +4,13 @@
 
 //test
 int main(){
-    selectPort();
+    test();
     //selectPort();
 
+    return 0;
+}
+
+int test(){
+    excuteVBScript("Macro1");
     return 0;
 }

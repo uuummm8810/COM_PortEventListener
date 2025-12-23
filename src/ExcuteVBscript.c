@@ -13,8 +13,8 @@ int excuteVBScript(char macroName[200]){
 
     //下記のsprintfはprojectDirectoryPathが長すぎると正常に動作しない
     //projectファイルをあまりディレクトリの入れ子とならないようにすること
-    sprintf(vbScriptPath, "%240s/src/ExcuteVBA.vbs",projectDirectoryPath);
-    sprintf(macroBookPath,"%240s/bin/MacroBook.xlsm", projectDirectoryPath);
+    sprintf(vbScriptPath, "%s\\src\\ExcuteVBA.vbs",projectDirectoryPath);
+    sprintf(macroBookPath,"%s\\bin\\MacroBook.xlsm", projectDirectoryPath);
     
     //引き渡し先VBScriptの引数 は第一引数がMacroWorkBookPathである
     sprintf(cmd, "cscript //nologo \"%s\" \"%s\" \"%s\"", vbScriptPath, macroBookPath, macroName);

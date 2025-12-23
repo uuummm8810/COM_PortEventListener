@@ -28,3 +28,6 @@ excel.Run "'" & macroWorkBook.Name & "'!" & macroName
 ' マクロ用Workbookを閉じてから画面更新を再開してマクロWBを画面に見せない
 macroWorkBook.Close False
 excel.ScreenUpdating = True
+
+Set macroWorkBook = Nothing
+Set excel = Nothing

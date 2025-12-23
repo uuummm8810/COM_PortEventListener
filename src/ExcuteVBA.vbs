@@ -12,6 +12,9 @@ Set args = WScript.Arguments
 macroWorkBookPath=args(0)
 macroName=args(1)
 
+'エラーがあってもそのまま進み、最後のクローズ処理を完了する
+On Error Resume Next
+
 Set excel = GetObject(, "Excel.Application") ' 起動中のExcelを取得
 Set targetWorkBook = excel.ActiveWorkbook
 
@@ -29,5 +32,8 @@ excel.Run "'" & macroWorkBook.Name & "'!" & macroName
 macroWorkBook.Close False
 excel.ScreenUpdating = True
 
+On Error Goto 0
+
+'クローズ処理
 Set macroWorkBook = Nothing
 Set excel = Nothing

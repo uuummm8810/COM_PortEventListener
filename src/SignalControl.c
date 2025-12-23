@@ -4,6 +4,7 @@
 #include "CommonObjectControler.h"
 #include "ExcuteVBScript.h"
 
+//signal_charをもとにコードが実行されないのなら1を戻す
 int signalCharJudgment(char signal_char){
 
     switch (signal_char){
@@ -31,6 +32,6 @@ int signalCharJudgment(char signal_char){
             break;
     }
 
-    //signal_charをもとにコードが実行されないのなら1を戻す
+    
     return 1;
 }

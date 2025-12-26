@@ -24,8 +24,20 @@ int signalCharJudgment(char signal_char){
             excuteVBScript("CalcStdevPAboveCell");
             return 0;
 
-        case 'd':               
-            excuteVBScript("Macro1");            
+        case '4':               
+            excuteVBScript("SumSelectedCellsAndDisplayBelowo1");            
+            return 0;
+
+	 case '5':               
+            excuteVBScript("AverageSelectedCellsAndDisplayBelow");            
+            return 0;
+
+	 case '6':               
+            excuteVBScript("StandardDeviationSelectedCellsAndDisplayBelow");            
+            return 0;
+
+	 case '7':               
+            excuteVBScript("LeastSquaresAndDisplayBelow");            
             return 0;
 
         default:

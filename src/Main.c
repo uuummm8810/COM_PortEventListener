@@ -11,8 +11,8 @@ int test(){
 }
 
 int main(){
-    test();
-    //selectPort();
+    //test();
+    selectPort();
 
     return 0;
 }

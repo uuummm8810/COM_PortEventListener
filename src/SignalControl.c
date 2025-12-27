@@ -28,15 +28,15 @@ int signalCharJudgment(char signal_char){
             excuteVBScript("SumSelectedCellsAndDisplayBelowo1");            
             return 0;
 
-	 case '5':               
+	    case '5':               
             excuteVBScript("AverageSelectedCellsAndDisplayBelow");            
             return 0;
 
-	 case '6':               
+	    case '6':               
             excuteVBScript("StandardDeviationSelectedCellsAndDisplayBelow");            
             return 0;
 
-	 case '7':               
+	    case '7':               
             excuteVBScript("LeastSquaresAndDisplayBelow");            
             return 0;
 

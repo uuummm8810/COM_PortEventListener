@@ -37,3 +37,5 @@ On Error Goto 0
 'クローズ処理
 Set macroWorkBook = Nothing
 Set excel = Nothing
+
+WScript.Quit 0

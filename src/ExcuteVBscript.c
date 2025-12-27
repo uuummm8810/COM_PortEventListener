@@ -19,7 +19,33 @@ int excuteVBScript(char macroName[200]){
     
     //引き渡し先VBScriptの引数 は第一引数がMacroWorkBookPathである
     snprintf(cmd, sizeof(cmd), "cscript //nologo \"%s\" \"%s\" \"%s\"", vbScriptPath, macroBookPath, macroName);
-    system(cmd);
+
+    //CreateProcessのための初期化
+    STARTUPINFO startupInfo;
+    PROCESS_INFORMATION processInfo;
+    ZeroMemory(&startupInfo, sizeof(startupInfo));
+    startupInfo.cb = sizeof(startupInfo);
+    ZeroMemory(&processInfo, sizeof(processInfo));
+    HANDLE hCscript;
+
+    //WSHでVBScript を実行
+    if(CreateProcess(
+        NULL,
+        cmd,
+        NULL,
+        NULL,
+        FALSE,
+        0,
+        NULL,
+        NULL,
+        &startupInfo,
+        &processInfo
+    )){
+        hCscript = processInfo.hProcess;
+
+    }else{
+        return 1;//CreateProcess失敗時には1を返す
+    }
     
     return 0;
 }

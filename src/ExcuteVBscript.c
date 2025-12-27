@@ -2,6 +2,7 @@
 #include <windows.h>
 #include <shlwapi.h>
 
+//VBScript にて、{ProjectDirectory}/bin/MacroBookのマクロ{macroName}を実行
 int excuteVBScript(char macroName[200]){
     char cmd[1024];//サイズを十分の大きい値に設定
     char currentPath[MAX_PATH], projectDirectoryPath[MAX_PATH], macroBookPath[MAX_PATH], vbScriptPath[MAX_PATH];    

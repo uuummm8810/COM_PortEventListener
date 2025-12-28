@@ -19,12 +19,10 @@ int eventListener(char com_port[]) {
     ); 
     char received_char;
 
-    int eventLoopFlag = 1;
     if (handlePort == INVALID_HANDLE_VALUE) {
         //printf("Port %s opened failed\n", com_port);
-        eventLoopFlag = 0;
-    }else{
         //printf("Port %s opened successfully\n", com_port);
+        return 1;//CreateFile失敗時に即座に終了
     }
     
     DWORD dwEvtMask;//イベント状態
@@ -47,9 +45,9 @@ int eventListener(char com_port[]) {
     SetCommMask(handlePort, EV_RXCHAR);//EV_RXCHARを検知したときにhandlePortを呼び出す
 
     // イベントリスナーのメインループ
-    while(eventLoopFlag) {
         
         //printf("Waiting for event...\n");
+    while(1) {
         if (WaitCommEvent(handlePort, &dwEvtMask, NULL)) {//WaitCommEventで一時休止
             
             // データを1byte読み込み判定

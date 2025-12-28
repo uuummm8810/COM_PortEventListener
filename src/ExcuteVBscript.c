@@ -46,6 +46,6 @@ int excuteVBScript(char macroName[200]){
     }else{
         return 1;//CreateProcess失敗時には1を返す
     }
-    
+
     return 0;
 }

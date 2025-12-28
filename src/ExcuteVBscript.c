@@ -2,6 +2,11 @@
 #include <windows.h>
 #include <shlwapi.h>
 
+int excuteVBScript(char macroName[200]);
+void CALLBACK OnProcessFinished(void* lpParameter, BOOLEAN TimerOrWaitFired);
+
+HANDLE hWSHProcess;
+
 //VBScript にて、{ProjectDirectory}/bin/MacroBookのマクロ{macroName}を実行
 int excuteVBScript(char macroName[200]){
     char cmd[1024];//サイズを十分の大きい値に設定
@@ -26,7 +31,6 @@ int excuteVBScript(char macroName[200]){
     ZeroMemory(&startupInfo, sizeof(startupInfo));
     startupInfo.cb = sizeof(startupInfo);
     ZeroMemory(&processInfo, sizeof(processInfo));
-    HANDLE hCscript;
 
     //WSHでVBScript を実行
     if(CreateProcess(
@@ -41,11 +45,41 @@ int excuteVBScript(char macroName[200]){
         &startupInfo,
         &processInfo
     )){
-        hCscript = processInfo.hProcess;
-
+        CloseHandle(processInfo.hThread);
+        HANDLE waitObject=NULL;
+        DWORD dw5Second = 5000;
+        RegisterWaitForSingleObject(
+            &waitObject,
+            processInfo.hProcess,
+            OnProcessFinished,
+            processInfo.hProcess,
+            dw5Second,
+            WT_EXECUTEONLYONCE
+        );
     }else{
         return 1;//CreateProcess失敗時には1を返す
     }
 
     return 0;
+}
+
+void CALLBACK OnProcessFinished(void* lpParameter, BOOLEAN TimerOrWaitFired) {
+    hWSHProcess = (HANDLE)lpParameter;
+
+    DWORD exitCode;
+    GetExitCodeProcess(hWSHProcess, &exitCode);
+    printf("%lu",exitCode);
+    CloseHandle(hWSHProcess);
+}
+
+//WSHがActiveかチェックするための関数
+//WSHをクローズしたのちに偶然ほかのプロセスが同じHANDLEを利用していると不具合の可能性
+BOOL checkWSHProcessActive(){
+    DWORD exitCode;
+    GetExitCodeProcess(hWSHProcess, &exitCode);
+    if(exitCode == STILL_ACTIVE){
+        return TRUE;    
+    }else{
+        return FALSE;
+    }
 }

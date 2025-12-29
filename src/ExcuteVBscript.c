@@ -70,16 +70,16 @@ void CALLBACK OnProcessFinished(void* lpParameter, BOOLEAN TimerOrWaitFired) {
     GetExitCodeProcess(hWSHProcess, &exitCode);
     printf("%lu",exitCode);
     CloseHandle(hWSHProcess);
+    hWSHProcess = NULL;
 }
 
 //WSHがActiveかチェックするための関数
-//WSHをクローズしたのちに偶然ほかのプロセスが同じHANDLEを利用していると不具合の可能性
+//WSHをクローズしたときにhWSHProcessをNULLにする
 BOOL checkWSHProcessActive(){
-    DWORD exitCode;
-    GetExitCodeProcess(hWSHProcess, &exitCode);
-    if(exitCode == STILL_ACTIVE){
-        return TRUE;    
-    }else{
+
+    if(hWSHProcess == NULL){
         return FALSE;
+    }else{
+        return TRUE;
     }
 }

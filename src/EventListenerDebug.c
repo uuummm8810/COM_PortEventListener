@@ -2,6 +2,7 @@
 #include <windows.h>
 #include <sysinfoapi.h>
 #include "SignalControl.h"
+#include "ExcuteVBScript.h"
 
 //#define COM_PORT "\\\\.\\COM3"
 #define BAUD 9600 //通信速度[bps]
@@ -53,7 +54,7 @@ int eventListenerDebug(char com_port[]) {
     while(eventLoopFlag) {
         
         printf("Waiting for event...\n");
-        if (WaitCommEvent(handlePort, &dwEvtMask, NULL)) {//WaitCommEventで一時休止
+        if (WaitCommEvent(handlePort, &dwEvtMask, NULL) && (hWSHProcess == NULL)) {//WaitCommEventで一時休止
             
             // データを1byte読み込む
             

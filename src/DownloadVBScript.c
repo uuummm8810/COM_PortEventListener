@@ -28,7 +28,7 @@ int checkUpdate(){
             0//非同期通信をするならここを変更
         );
     }else{
-        printf("Server Offline");
+        printf("Server Offline\n");
     }
     
     HANDLE hConnect = NULL;
@@ -60,9 +60,9 @@ int checkUpdate(){
             0 //dwContext
         );
     }
-    
+    BOOL RequestComplete = FALSE;
     if(hRequest != NULL){ 
-        HttpSendRequest(
+        RequestComplete = HttpSendRequest(
             hRequest,
             NULL,
             0,
@@ -70,8 +70,8 @@ int checkUpdate(){
             0
         );
     }
-    if(1){
-
+    if(RequestComplete){
+        printf("RequestComplete\n");
     }
     //更新があった場合に個別でダウンロードを呼び出し
 

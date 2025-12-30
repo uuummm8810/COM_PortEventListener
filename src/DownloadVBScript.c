@@ -5,6 +5,7 @@
 int sanitizeVBScript();
 int checkUpdate();
 int downloadVBS(int VBS_num);
+int downloadVBS(int VBS_num);
 
 //LPCWSTRなどのWideを考慮していないため修正の可能性あり
 

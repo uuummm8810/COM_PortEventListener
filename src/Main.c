@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "EventListenerDebug.h"
 #include "ExcuteVBScript.h"
+#include "DownloadVBScript.h"
 
 int test();
 int main();

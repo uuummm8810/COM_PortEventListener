@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <windows.h>
 #include <wininet.h>
+#include "SanitizeVBScript.h"
 
-int sanitizeVBScript();
 int checkUpdate();
 int downloadVBS(int VBS_num);
 int downloadVBS(int VBS_num);
@@ -92,7 +92,11 @@ int checkUpdate(){
 //VBScriptの番号に対応したファイルをダウンロード
 int downloadVBS(int VBS_num){
     
-    
+    char* downloadText = NULL;//仮
+    if(sanitizeVBScript(downloadText)){
+        printf("Corrupted VBScript detected!\n");
+        return 1; //不審なスクリプトがあった場合には中止
+    }
     return 0;
 }
 
@@ -102,14 +106,3 @@ int convertVBS(){
 
 }
 
-
-//ここで危険な文字列がないかチェック
-//不審なものを検出した場合には1をreturn
-int sanitizeVBScript(char text[]){
-    
-    if(1){
-        return 1;
-        //有害だった場合には1をreturn
-    }
-    return 0;
-}

@@ -3,6 +3,7 @@
 #include "EventListenerDebug.h"
 #include "ExcuteVBScript.h"
 #include "DownloadVBScript.h"
+#include "BluetoothInitialize.h"
 
 int test();
 int main();
@@ -15,6 +16,7 @@ int test(){
 
 int main(){
     //test();
+    initializeBluetooth();
     selectPort();
 
     return 0;

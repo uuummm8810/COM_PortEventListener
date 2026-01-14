@@ -3,7 +3,9 @@
 #include <shlwapi.h>
 
 int excuteVBScript(char macroName[200]);
-void CALLBACK OnProcessFinished(void* lpParameter, BOOLEAN TimerOrWaitFired);
+void CALLBACK OnWSHProcessFinished(void* lpParameter, BOOLEAN TimerOrWaitFired);
+int excuteWSH(char* cmd);
+BOOL checkWSHProcessActive();
 
 HANDLE hWSHProcess;
 
@@ -25,6 +27,11 @@ int excuteVBScript(char macroName[200]){
     //引き渡し先VBScriptの引数 は第一引数がMacroWorkBookPathである
     snprintf(cmd, sizeof(cmd), "cscript //nologo \"%s\" \"%s\" \"%s\"", vbScriptPath, macroBookPath, macroName);
 
+    excuteWSH(cmd);
+    return 0;
+}
+
+int excuteWSH(char* cmd){
     //CreateProcessのための初期化
     STARTUPINFO startupInfo;
     PROCESS_INFORMATION processInfo;
@@ -51,7 +58,7 @@ int excuteVBScript(char macroName[200]){
         RegisterWaitForSingleObject(
             &waitObject,
             processInfo.hProcess,
-            OnProcessFinished,
+            OnWSHProcessFinished,
             processInfo.hProcess,
             dw5Second,
             WT_EXECUTEONLYONCE
@@ -63,7 +70,7 @@ int excuteVBScript(char macroName[200]){
     return 0;
 }
 
-void CALLBACK OnProcessFinished(void* lpParameter, BOOLEAN TimerOrWaitFired) {
+void CALLBACK OnWSHProcessFinished(void* lpParameter, BOOLEAN TimerOrWaitFired) {
     hWSHProcess = (HANDLE)lpParameter;
 
     DWORD exitCode;

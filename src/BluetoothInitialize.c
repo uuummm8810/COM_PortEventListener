@@ -3,11 +3,15 @@
 #include <string.h>
 #include <shlwapi.h>
 #include <stdio.h>
+#include <devguid.h>
+#include <setupapi.h>
+#include "EventListenerDebug.h"
 #include "ExcuteEXE.h"
 
 int initializeBluetooth();
 int findBluetoothDevice(const wchar_t* targetName, BLUETOOTH_DEVICE_INFO* outInfo);
 int setupSPP(BLUETOOTH_DEVICE_INFO deviceInfo);
+BOOL findComPortByBthAddress(const char* targetAddr, char* outPort, size_t outSize);
 
 int initializeBluetooth() {
 
@@ -18,7 +22,7 @@ int initializeBluetooth() {
     HBLUETOOTH_RADIO_FIND hFind = BluetoothFindFirstRadio(&btFindRadioParams, &hRadio);
     
     if (hFind == NULL) {
-        printf("No Bluetooth radios found.\n");
+        printf("Bluetooth is not available.\n");
         return 1;
     }
 
@@ -27,9 +31,24 @@ int initializeBluetooth() {
     CloseHandle(hRadio);
 
     BLUETOOTH_DEVICE_INFO deviceInfo = { sizeof(BLUETOOTH_DEVICE_INFO) };
-    if (hFind != NULL && findBluetoothDevice(bluetoothDeviceName, &deviceInfo) == 0) {
-        printf("Bluetooth device not found.\n");
+    if (findBluetoothDevice(bluetoothDeviceName, &deviceInfo)) {
+        printf("Bluetooth device \"%S\" not found.\n", bluetoothDeviceName);
         return 1;
+    }
+
+    //fideBluetoothで取得したdeviceinfoとCOMポートのBluetoothアドレスが一致するか確認
+    //デバイスが見つからなければSPPのセットアップ開始
+    char targetAdress[128];
+    snprintf(targetAdress,sizeof(targetAdress),"%012llX",deviceInfo.Address);
+    char outPort[16];//バッファオーバーフロー抑止を後で行うこと
+    size_t outSize;
+    if(findComPortByBthAddress(targetAdress,outPort,outSize)){
+        setupSPP(deviceInfo);
+    }
+
+    //テストコード
+    if(outPort != NULL){
+        eventListenerDebug(outPort);
     }
 
     return 0;
@@ -57,13 +76,13 @@ int findBluetoothDevice(const wchar_t* targetName, BLUETOOTH_DEVICE_INFO* outInf
         if (wcscmp(deviceInfo.szName, targetName) == 0) {
             *outInfo = deviceInfo; // 見つかったら情報をコピー
             BluetoothFindDeviceClose(hFind);
-            return 1;
+            return 0;
         }
     } while (BluetoothFindNextDevice(hFind, &deviceInfo));
 
-    //デバイスが見つからなかった場合0を返す
+    //デバイスが見つからなかった場合1を返す
     BluetoothFindDeviceClose(hFind);
-    return 0;
+    return 1;
 }
 
 int setupSPP(BLUETOOTH_DEVICE_INFO deviceInfo){
@@ -84,8 +103,48 @@ int setupSPP(BLUETOOTH_DEVICE_INFO deviceInfo){
     ZeroMemory(&processInfo, sizeof(processInfo));
 
     char cmd[1024];
-    snprintf(cmd, sizeof(cmd), "%s\\src\\BluetoothSPP_Setup.exe \"%04X%08X\"", projectDirectoryPath, &deviceInfo);
+    snprintf(cmd, sizeof(cmd), "%s\\src\\BluetoothSPP_Setup.exe \"%012llX\"", projectDirectoryPath, deviceInfo.Address.ullLong);
     excuteEXE(cmd);
 
     return 0;
+}
+
+//targetAddrは16進数に変換しておくこと
+BOOL findComPortByBthAddress(const char* targetAddr, char* outPort, size_t outSize) {
+    HDEVINFO hDevInfo;
+    SP_DEVINFO_DATA devInfoData;
+    char buffer[1024];
+    BOOL found = FALSE;
+
+    //COMポートをすべて列挙しリスト化
+    hDevInfo = SetupDiGetClassDevs(&GUID_DEVINTERFACE_COMPORT, NULL, NULL, DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
+    if (hDevInfo == INVALID_HANDLE_VALUE) return FALSE;
+
+    //フレンドリー名からCOMポートの番号を文字列比較によって取り出す
+    devInfoData.cbSize = sizeof(SP_DEVINFO_DATA);
+    for (DWORD i = 0; SetupDiEnumDeviceInfo(hDevInfo, i, &devInfoData); i++) {
+        if (SetupDiGetDeviceRegistryProperty(hDevInfo, &devInfoData, SPDRP_HARDWAREID, NULL, (PBYTE)buffer, sizeof(buffer), NULL)) {
+            if (strstr(buffer, targetAddr) != NULL) {
+                if (SetupDiGetDeviceRegistryProperty(hDevInfo, &devInfoData, SPDRP_FRIENDLYNAME, NULL, (PBYTE)buffer, sizeof(buffer), NULL)) {
+                    char* comStart = strstr(buffer, "(COM");
+                    if (comStart) {
+                        comStart++; // '(' を飛ばす
+                        char* comEnd = strchr(comStart, ')');
+                        if (comEnd) {
+                            size_t len = comEnd - comStart;
+                            if (len < outSize) {
+                                strncpy(outPort, comStart, len);
+                                outPort[len] = '\0';
+                                found = TRUE;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    SetupDiDestroyDeviceInfoList(hDevInfo);
+    return found;
 }

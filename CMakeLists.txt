@@ -7,6 +7,7 @@ add_executable(EventListener ${SOURCES})
 target_link_libraries(EventListener PRIVATE shlwapi)
 target_link_libraries(EventListener PRIVATE wininet)
 target_link_libraries(EventListener PRIVATE bluetoothapis)
+target_link_libraries(EventListener PRIVATE setupapi)
 set_target_properties(EventListener PROPERTIES LINK_FLAGS "-static")
 
 set(CMAKE_C_STANDARD 11)

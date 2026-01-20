@@ -75,7 +75,7 @@ void CALLBACK OnWSHProcessFinished(void* lpParameter, BOOLEAN TimerOrWaitFired) 
 
     DWORD exitCode;
     GetExitCodeProcess(hWSHProcess, &exitCode);
-    printf("%lu",exitCode);
+    //printf("%lu",exitCode);
     CloseHandle(hWSHProcess);
     hWSHProcess = NULL;
 }

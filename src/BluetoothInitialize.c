@@ -39,16 +39,30 @@ int initializeBluetooth() {
     //fideBluetoothで取得したdeviceinfoとCOMポートのBluetoothアドレスが一致するか確認
     //デバイスが見つからなければSPPのセットアップ開始
     char targetAdress[128];
-    snprintf(targetAdress,sizeof(targetAdress),"%012llX",deviceInfo.Address);
-    char outPort[16];//バッファオーバーフロー抑止を後で行うこと
-    size_t outSize;
-    if(findComPortByBthAddress(targetAdress,outPort,outSize)){
+    snprintf(targetAdress, sizeof(targetAdress), "%012llX", deviceInfo.Address.ullLong);
+    
+    char outPort[16] = {0};
+    size_t outSize = sizeof(outPort);
+    
+    // ポートが見つからない場合にセットアップを実行する
+    if (!findComPortByBthAddress(targetAdress, outPort, outSize)) {
+        printf("Start SPP setup...\n");
         setupSPP(deviceInfo);
+        // セットアップ完了とOSの認識を待つためにリトライループを追加
+        for (int i = 0; i < 5; i++) {
+            Sleep(2000);
+            if (findComPortByBthAddress(targetAdress, outPort, outSize)) break;
+        }
     }
 
-    //テストコード
-    if(outPort != NULL){
-        eventListenerDebug(outPort);
+    if (outPort[0] != '\0') {
+        char fullPortPath[32];
+        snprintf(fullPortPath, sizeof(fullPortPath), "\\\\.\\%s", outPort);
+        printf("Target device found on %s\n", fullPortPath);
+        eventListenerDebug(fullPortPath);
+    } else {
+        printf("Failed to identify COM port for the device.\n");
+        return 1;
     }
 
     return 0;
@@ -123,12 +137,17 @@ BOOL findComPortByBthAddress(const char* targetAddr, char* outPort, size_t outSi
     //フレンドリー名からCOMポートの番号を文字列比較によって取り出す
     devInfoData.cbSize = sizeof(SP_DEVINFO_DATA);
     for (DWORD i = 0; SetupDiEnumDeviceInfo(hDevInfo, i, &devInfoData); i++) {
+        // ハードウェアIDを取得
         if (SetupDiGetDeviceRegistryProperty(hDevInfo, &devInfoData, SPDRP_HARDWAREID, NULL, (PBYTE)buffer, sizeof(buffer), NULL)) {
+            _strupr(buffer); // 大文字に変換して比較を確実にする
             if (strstr(buffer, targetAddr) != NULL) {
                 if (SetupDiGetDeviceRegistryProperty(hDevInfo, &devInfoData, SPDRP_FRIENDLYNAME, NULL, (PBYTE)buffer, sizeof(buffer), NULL)) {
                     char* comStart = strstr(buffer, "(COM");
                     if (comStart) {
-                        comStart++; // '(' を飛ばす
+                        comStart++;
+                        comStart++;
+                        comStart++;
+                        comStart++; // '(COM' を飛ばしてCOMの番号 "x" から開始
                         char* comEnd = strchr(comStart, ')');
                         if (comEnd) {
                             size_t len = comEnd - comStart;

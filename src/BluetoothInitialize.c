@@ -144,10 +144,9 @@ BOOL findComPortByBthAddress(const char* targetAddr, char* outPort, size_t outSi
                 if (SetupDiGetDeviceRegistryProperty(hDevInfo, &devInfoData, SPDRP_FRIENDLYNAME, NULL, (PBYTE)buffer, sizeof(buffer), NULL)) {
                     char* comStart = strstr(buffer, "(COM");
                     if (comStart) {
-                        comStart++;
-                        comStart++;
-                        comStart++;
-                        comStart++; // '(COM' を飛ばしてCOMの番号 "x" から開始
+                        for(int i = 0; i < 4; i++){
+                            comStart++;// '(COM' を飛ばしてCOMの番号 "x" から開始
+                        } 
                         char* comEnd = strchr(comStart, ')');
                         if (comEnd) {
                             size_t len = comEnd - comStart;
